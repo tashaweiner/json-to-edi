@@ -18,7 +18,14 @@
         }
     },
     "receiver": {
-        "organizationName": "BCBS BARBIELAND"
+        "organizationName": "BARBIELAND MEDICAID"
+    },
+    "submitter": {
+        "organizationName": "Mattel Industries",
+        "contactInformation": {
+            "name": "Ruth Handler",
+            "phoneNumber": "8458130000"
+        }
     },
     "dependent": {
         "gender": "M",
@@ -52,13 +59,6 @@
             "postalCode": "845813000"
         }
     },
-    "submitter": {
-        "organizationName": "Mattel Industries",
-        "contactInformation": {
-            "name": "Ruth Handler",
-            "phoneNumber": "8458130000"
-        }
-    },
     "subscriber": {
         "address": {
             "city": "Barbie Land",
@@ -73,7 +73,7 @@
         "groupNumber": "3164",
         "paymentResponsibilityLevelCode": "P"
     },
-    "controlNumber": "098538993",
+    "controlNumber": "415133923",
     "claimInformation": {
         "serviceLines": [
             {
