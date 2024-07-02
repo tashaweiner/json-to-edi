@@ -40,7 +40,7 @@
         "firstName": "Kenneth",
         "dateOfBirth": "20141021",
         "paymentResponsibilityLevelCode": "P",
-        "relationshipToSubscriberCode": "53"
+        "relationshipToSubscriberCode": "01"
     },
     "rendering": {
         "npi": "4114293029",
@@ -125,5 +125,5 @@
         },
         "benefitsAssignmentCertificationIndicator": "Y"
     },
-    "tradingPartnerServiceId": "7499"
+    "tradingPartnerServiceId": "BARBIE"
 }
