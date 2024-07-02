@@ -9,7 +9,6 @@
             "postalCode": "845813000"
         },
         "employerId": "0309195988",
-        "providerType": "BillingProvider",
         "taxonomyCode": "193200000X",
         "organizationName": "Barbie Land General Childhood Development Center",
         "contactInformation": {
@@ -47,7 +46,6 @@
         "lastName": "Sherwood",
         "firstName": "Allan",
         "employerId": "0309195988",
-        "providerType": "RenderingProvider",
         "taxonomyCode": "106S00000X",
         "contactInformation": {
             "name": "Allan Sherwood"

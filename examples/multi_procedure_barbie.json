@@ -8,7 +8,6 @@
             "postalCode": "902452819"
         },
         "employerId": "0309195988",
-        "providerType": "BillingProvider",
         "taxonomyCode": "193200000X",
         "organizationName": "Mattel Industries",
         "contactInformation": {
@@ -21,7 +20,6 @@
         "lastName": "Roberts",
         "firstName": "Dr. Barbara",
         "employerId": "0309195988",
-        "providerType": "OrderingProvider",
         "taxonomyCode": "106S00000X",
         "contactInformation": {
             "name": "Dr. Barbara Roberts"
@@ -42,7 +40,6 @@
         "lastName": "Sherwood",
         "firstName": "Allan",
         "employerId": "0309195988",
-        "providerType": "RenderingProvider",
         "taxonomyCode": "106S00000X",
         "contactInformation": {
             "name": "Allan Sherwood"
