@@ -1,0 +1,111 @@
+{
+    "billing": {
+        "npi": "1234567890",
+        "address": {
+            "city": "Oakridge",
+            "state": "WA",
+            "address1": "1200 Willow St",
+            "postalCode": "981010000"
+        },
+        "employerId": "9988776655",
+        "taxonomyCode": "208D00000X",
+        "organizationName": "Evergreen Behavioral Health Center",
+        "contactInformation": {
+            "name": "Dr. Casey Morgan",
+            "phoneNumber": "2065550101"
+        }
+    },
+    "receiver": {
+        "organizationName": "PACIFIC HEALTHCARE NETWORK"
+    },
+    "submitter": {
+        "organizationName": "Evergreen Behavioral Health Center",
+        "contactInformation": {
+            "name": "Dr. Casey Morgan",
+            "phoneNumber": "2065550101"
+        }
+    },
+    "subscriber": {
+        "gender": "F",
+        "address": {
+            "city": "Oakridge",
+            "state": "WA",
+            "address1": "78 Sunset Ridge",
+            "postalCode": "990019999"
+        },
+        "lastName": "Patel",
+        "memberId": "457417845",
+        "firstName": "Liam",
+        "dateOfBirth": "20100101",
+        "paymentResponsibilityLevelCode": "P"
+    },
+    "controlNumber": "709748473",
+    "claimInformation": {
+        "serviceLines": [
+            {
+                "serviceDate": "20250414",
+                "professionalService": {
+                    "procedureCode": "97153",
+                    "measurementUnit": "UN",
+                    "serviceUnitCount": "9",
+                    "procedureIdentifier": "HC",
+                    "lineItemChargeAmount": "179.69",
+                    "compositeDiagnosisCodePointers": {
+                        "diagnosisCodePointers": [
+                            "1"
+                        ]
+                    }
+                },
+                "providerControlNumber": "401900429"
+            },
+            {
+                "serviceDate": "20250414",
+                "professionalService": {
+                    "procedureCode": "97155",
+                    "measurementUnit": "UN",
+                    "serviceUnitCount": "6",
+                    "procedureIdentifier": "HC",
+                    "lineItemChargeAmount": "193.98",
+                    "compositeDiagnosisCodePointers": {
+                        "diagnosisCodePointers": [
+                            "1"
+                        ]
+                    }
+                },
+                "providerControlNumber": "305933134"
+            }
+        ],
+        "claimFilingCode": "CI",
+        "claimChargeAmount": "373.67",
+        "claimFrequencyCode": "1",
+        "placeOfServiceCode": "11",
+        "signatureIndicator": "Y",
+        "patientControlNumber": "6991",
+        "planParticipationCode": "A",
+        "releaseInformationCode": "Y",
+        "serviceFacilityLocation": {
+            "npi": "1234567890",
+            "address": {
+                "city": "Oakridge",
+                "state": "WA",
+                "address1": "1200 Willow St",
+                "address2": "Building A",
+                "postalCode": "981010000"
+            },
+            "phoneName": "Dr. Casey Morgan",
+            "phoneNumber": "2065550101",
+            "organizationName": "Evergreen Behavioral Health Center"
+        },
+        "healthCareCodeInformation": [
+            {
+                "diagnosisCode": "F840",
+                "diagnosisTypeCode": "ABK"
+            }
+        ],
+        "claimSupplementalInformation": {
+            "priorAuthorizationNumber": "UM56064337"
+        },
+        "benefitsAssignmentCertificationIndicator": "Y"
+    },
+    "tradingPartnerServiceId": "PACNET"
+}

@@ -1,20 +1,42 @@
-barbEDI
+JSON to EDI
 =======
 
+## Running the Project
+### Python Version
+Python 3.13.2
+### Generate the EDI Output
+json_to_edi.py returns a string that contains the entire EDI output for associated JSON files that are uploaded to examples folder 
 
-## Structure
-barbiedi/
- => .git/
- => examples/
-		=> mojo_dojo_casa_house.837
-		=> mojo_dojo_casa_house.json
-		=> multi_procedure_barbie.837
-		=> multi_procedure_barbie.json
-		=> subscriber_with_a_dekendent.837
-		=> subscriber_with_a_dekendent.json
- => edi_to_json.py
+```bash
+python3 json_to_edi.py
+```
 
-The `examples` folder includes three example JSON files and the 837 files that they generate.
+### Test - example files provided
+```bash
+python3 -m unittest tests/test_edi_segments.py
+```
 
-**Note**
-The beginning envelope of the 837 Professional claim — the interchange, group set, and transaction set portions — are provided in `edi_to_json`. To cut down on implementation time, you may copy/paste these into your implementation.
+## Loops Structure
+Billing Provider
+└── Subscriber
+    └── Patient (if dependent exists)
+        └── Claim
+            ├── Service Facility (if different from Billing Provider)
+            ├── Rendering Provider
+            └── Service Lines
+
+
+## Edge Cases/ Rules 
+- Medicaid Claims 
+	- Medicaid always lists the child as the subscriber. Dependents are not used for Medicaid claims.
+- Private Insurance 
+	- Can include either:
+		- A subscriber-only claim (no dependent field).
+		- a claim with a dependent listed seperately as the patient 
+	- If no dependent is present, the subscriber is also the patient.
+- Contact Info Rules
+	- If the billing provider and submitter have the same contact info (name + phone), omit the PER segment in the billing loop to avoid duplication.
+- NPI rules 
+	- If the billing provider and service facility share the same NPI, treat them as the same legal entity and skip the service facility loop.
+
+- When there are multiple service lines, it's assumed they share the same rendering provider, so it gets declared once before the lines.

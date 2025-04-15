@@ -1,187 +1,80 @@
-import enum
 import json
+import os
+import sys
+import logging
+from helpers.enums import *
+from loops.billing_loop import billing_provider_loop
+from loops.subscriber_loop import subscriber_loop
+from loops.patient_loop import patient_loop
+from loops.claim_loop import claim_loop
+from loops.rendering_and_facility_provider_loop import rendering_provider_and_services_loop
+from helpers.shared_helpers import generate_random_string
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+logging.basicConfig(level=logging.INFO)
+
+def is_medicaid(json_data: dict) -> bool:
+    # Returns True if the claim is a Medicaid claim
+    # Check if the claimFilingCode is "MC" (Medicaid)
+    return json_data.get("claimInformation", {}).get("claimFilingCode") == ClaimFilingIndicatorCode.Medicaid.value 
+
+def has_dependent(json_data: dict) -> bool:
+    # Check if the claim has a dependent
+    return json_data.get("dependent") is not None
 
 
-class SegmentHeader(enum.Enum):
-    Provider = "PRV"
-    Name = "NM1"
-    AddressLine1 = "N3"
-    CityStatePostalCode = "N4"
-    SubscriberInformation = "SBR"
-    Reference = "REF"
-
-
-class ProviderType(enum.Enum):
-    Billing = "BI"
-
-
-class RelationshipToSubscriber(enum.Enum):
-    Self = "18"
-
-
-class EntityIdentifierCode(enum.Enum):
-    BillingProvider = "85"
-
-
-class ReferenceIdentificationQualifier(enum.Enum):
-    TaxonomyCode = "PXC"
-    NationalProviderIdentifier = "XX"
-    MemberId = "MI"
-    EmployerIdentificationNumber = "EI"
-
-
-class ClaimFilingIndicatorCode(enum.Enum):
-    Medicaid = "MC"
-
-
-class PaymentResponsibilityLevelCode(enum.Enum):
-    Primary = "P"
-
-
-# SBR*P*18*******MC~
-# NM1*IL*1*Carson*Kenneth****MI*063997341~
-# N3*Mojo Dojo Casa House~
-# N4*Barbie Land*MA*000362919~
-# DMG*D8*20141021*M~
-def subscriber_loop(json_data: dict) -> list[str]:
-    return [
-        "*".join(
-            [
-                SegmentHeader.SubscriberInformation.value,
-                PaymentResponsibilityLevelCode(
-                    json_data["subscriber"]["paymentResponsibilityLevelCode"]
-                ).value,
-                RelationshipToSubscriber.Self.value,
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ClaimFilingIndicatorCode.Medicaid.value,
-            ]
-        )
-        + "~",
-        "*".join(
-            [
-                SegmentHeader.Name.value,
-                "IL",
-                "1",
-                json_data["subscriber"]["lastName"],
-                json_data["subscriber"]["firstName"],
-                "",
-                "",
-                "",
-                ReferenceIdentificationQualifier.MemberId.value,
-                json_data["subscriber"]["memberId"],
-            ]
-        )
-        + "~",
-        "*".join(
-            [
-                SegmentHeader.AddressLine1.value,
-                json_data["subscriber"]["address"]["address1"],
-            ]
-        )
-        + "~",
-        "*".join(
-            [
-                SegmentHeader.CityStatePostalCode.value,
-                json_data["subscriber"]["address"]["city"],
-                json_data["subscriber"]["address"]["state"],
-                json_data["subscriber"]["address"]["postalCode"],
-            ]
-        )
-        + "~",
-    ]
-
-
-def billing_provider_loop(json_data: dict) -> list[str]:
-    # Billing provider
-    # provider (PRV) segment
-    return [
-        "*".join(
-            [
-                SegmentHeader.Provider.value,
-                ProviderType.Billing.value,
-                ReferenceIdentificationQualifier.TaxonomyCode.value,
-                json_data["billing"]["taxonomyCode"],
-            ]
-        )
-        + "~",
-        # name (NM1) segment
-        "*".join(
-            [
-                SegmentHeader.Name.value,
-                EntityIdentifierCode.BillingProvider.value,
-                *(["2"] if "organizationName" in json_data["billing"] else ["1"]),
-                json_data["billing"]["organizationName"],
-                "",
-                "",
-                "",
-                "",
-                ReferenceIdentificationQualifier.NationalProviderIdentifier.value,
-                json_data["billing"]["npi"],
-            ]
-        )
-        + "~",
-        # address line 1 (N3) segment
-        "*".join(
-            [
-                SegmentHeader.AddressLine1.value,
-                json_data["billing"]["address"]["address1"],
-            ]
-        )
-        + "~",
-        # city, state, postal code (N4) segment
-        "*".join(
-            [
-                SegmentHeader.CityStatePostalCode.value,
-                json_data["billing"]["address"]["city"],
-                json_data["billing"]["address"]["state"],
-                json_data["billing"]["address"]["postalCode"],
-            ]
-        )
-        + "~",
-        "*".join(
-            [
-                SegmentHeader.Reference.value,
-                ReferenceIdentificationQualifier.EmployerIdentificationNumber.value,
-                json_data["billing"]["employerId"],
-            ]
-        )
-        + "~",
-    ]
-
-
-def main():
+def generate_edi(json_data, test=False):
     hard_coded_header = """
-ISA*00*          *00*          *ZZ*AV09311993     *01*030240928      *240702*1531*^*00501*415133923*0*P*>~
-GS*HC*1923294*030240928*20240702*1533*415133923*X*005010X222A1~
-ST*837*415133923*005010X222A1~
+ISA*00*          *00*          *ZZ*EVERGRNHLTH     *01*030240928      *240702*1531*^*00501*987654321*0*P*>~
+GS*HC*EVERGRNHLTH*030240928*20240702*1533*987654321*X*005010X222A1~
+ST*837*987654321*005010X222A1~
 BHT*0019*00*1*20240702*1531*CH~
-NM1*41*2*Mattel Industries*****46*1234567890~
-PER*IC*Ruth Handler*TE*8458130000~
-NM1*40*2*AVAILITY 5010*****46*030240928~
+NM1*41*2*Evergreen Behavioral Health Center*****46*1234567890~
+PER*IC*Dr. Casey Morgan*TE*2065550101~
+NM1*40*2*PACIFIC HEALTHCARE NETWORK*****46*030240928~
 HL*1**20*1~"""
 
-    hard_coded_trailer = """SE*30*415133923~
-GE*1*415133923~
-IEA*1*415133923~
-"""
-    filename = "./examples/mojo_dojo_casa_house.json"
-    with open(filename) as file:
-        json_data = json.load(file)
+    hard_coded_trailer = """SE*30*987654321~
+GE*1*987654321~
+IEA*1*987654321~"""
 
+    # all loops in between the "envelope"
     claim_content = "\n".join(
         [
             *billing_provider_loop(json_data),
-            "HL*2*1*22*0~",  # Hierarchical Level
-            *subscriber_loop(json_data),
+            *subscriber_loop(json_data, is_medicaid(json_data), has_dependent(json_data)),
+            *patient_loop(json_data,has_dependent(json_data)),
+            *claim_loop(json_data),
+            *rendering_provider_and_services_loop(json_data)
         ]
     )
     edi = hard_coded_header + "\n" + claim_content + "\n" + hard_coded_trailer
-    print(edi)
+    # print(edi)
+    logging.info("EDI generated successfully")
+    logging.info(f"EDI output:\n{edi}")
+    # write output to a file for new jsonFiles
+    if not test: 
+        r = generate_random_string()
+        output_filename =f"./examples/edifiles/{r}.edi"
+        logging.info(f"EDI output file generated: {output_filename}")
+        with open(output_filename, "w") as f:
+            f.write(edi)
+    
+    return edi
+
+
+def main():
+    filename = "./examples/jsonfiles/example_1.json"
+    # filename = "./examples/jsonfiles/example_2.json"
+    # filename = "./examples/jsonfiles/example_3.json"
+  
+    logging.info(f"Input JSON file: {filename}")
+    with open(filename) as file:
+        json_data = json.load(file)
+
+    ediFile = generate_edi(json_data)
+
+
 
 
 main()

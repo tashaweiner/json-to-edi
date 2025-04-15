@@ -1,0 +1,21 @@
+
+# Ignore interview-specific readme
+interviewREADME.md
+
+# Python cache and environment files
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.env
+.venv
+.env.*
+.venv.*
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+.DS_Store
